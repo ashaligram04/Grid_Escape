@@ -30,3 +30,16 @@ Once you have downloaded the files, follow these steps:
 12. Program should appear on the screen
 
 ## Module Hierarchy
+
+## Inputs and Outputs
+
+## Modifications
+
+## Conclusion
+
+### Responsibilities
+
+### Timeline of Work Completed
+
+### Difficulties 
+
