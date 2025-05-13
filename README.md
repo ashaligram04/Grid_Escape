@@ -24,9 +24,9 @@ Once you have downloaded the files, follow these steps:
 9. Connect the Nexys A7-100T board to the computer using the Micro USB cable and switch the power ON
 10. Connect the VGA cable from the Nexys A7-100T board to the VGA monitor
 11. Open Hardware Manager
-  - "Open Target"
-  - "Auto Connect"
-  - "Program Device"
+     - "Open Target"
+     - "Auto Connect"
+     - "Program Device"
 12. Program should appear on the screen
 
 ## Module Hierarchy
