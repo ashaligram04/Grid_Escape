@@ -4,9 +4,21 @@
 ## Required Hardware
 For the game to work, you will need the following:
 - Nexys A7-100T FPGA Board
+  
+  <img src="Images/nexys_a7_100t.png" alt="Nexys A7-100T Board" width="300"/>
+  
 - Micro USB cable
+  
+  <img src="Images/micro_usb_cable.png" alt="Micro USB Cable" width="300"/>
+  
 - VGA Cable
+  
+  <img src="Images/vga_cable.jpg" alt="VGA Cable" width="300"/>
+  
 - Monitor with VGA Port
+  
+  <img src="Images/monitor.png" alt="Monitor" width="300"/>
+  
 - AMD Vivado™ Design Suite
 
 ## Setup
