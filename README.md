@@ -43,6 +43,8 @@ Once you have downloaded the files, follow these steps:
 
 ## Module Hierarchy
 
+![module](/Images/module.jpg)
+
 ## Inputs and Outputs
 
 ## Modifications
