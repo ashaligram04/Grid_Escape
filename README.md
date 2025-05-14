@@ -1,7 +1,7 @@
 # CPE 487 Final Project - Grid Escape
 **By: Atharva Shaligram and Sean Anderson**
 
-A 2D platformer game designed in VHDL and displayed on an FPGA board
+A 2D platformer game designed in VHDL and displayed on a screen using an FPGA board and VGA connector
 
 ## Project Overview
 
