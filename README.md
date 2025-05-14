@@ -1,5 +1,39 @@
 # CPE 487 Final Project - Grid Escape
-2D Platformer Game for CPE 487 Final Project
+**By: Atharva Shaligram and Sean Anderson**
+
+A 2D platformer game designed in VHDL and displayed on an FPGA board
+
+## Project Overview
+
+The goal of this project was to create a 2D platformer game using a Nexys A7 board and VGA display. The project replicated common game mechanics from platformer games such as movement, collision detection, and attacking.
+
+### Main Aspects of Grid Escape:
+
+#### Map Creation:
+
+- The start of the game generates and displays the map, player, and enemies (purple ghosts) on the screen.
+
+- Brick wall boundaries are created with staircases, mushrooms, and a flag at the end.
+
+#### Player Movement:
+
+- Four buttons are the inputs for the player movement, which are BTNL to move left, BTNR to move right, BTNU to jump, and BTNC to attack.
+
+- Gravity is always factored in for the player, so player can fall off platforms if there are open areas.
+
+#### Collision Detection:
+
+- Collision detection dictates player movement.
+
+## Expected Behavior
+
+- When the game loads in, a map and player is generated and displayed on the screen.
+
+  - Brick wall boundaries are created, with staircases, mushrooms, and a flag at end.
+
+  - Purple ghosts are hovering over platforms.
+
+- Player moves around the map
 
 ## Required Hardware
 For the game to work, you will need the following:
@@ -46,6 +80,17 @@ Once you have downloaded the files, follow these steps:
 ![module](/Images/module.jpg)
 
 ## Inputs and Outputs
+
+### `Game_Main.vhd`
+```
+
+```
+
+#### Inputs
+ - 
+#### Outputs
+ -
+
 
 ## Modifications
 
