@@ -161,8 +161,8 @@ END tilemap_vga;
 
 ## Modifications
 
-### Game_Main.vhd (previously pong.vhd) Modified
-The top level file of our project was based off of pong.vhd from Lab 6. We added more ports in to include all of the directional buttons on the FPGA board which include BTNL, BTNR, BTNC, BTNU, BTND. We added one new componenet which was tilemap_vga that includes most of the game logic. The port mapping of leddec16 was modified slightly to include two separate display ports where one would display the current game time and the other would display the previous game time. A process was added to allow for constant update of the leds. Tilemap_vga port mapping includes clock, pixel row, pixel column and all of the button as in ports and red, green, blue, counter for time, and new_last_score (previous game completion time) as out ports.
+### `Game_Main.vhd` (previously pong.vhd) Modified
+The top level file of our project was based off of `pong.vhd` from Lab 6. We added more ports in to include all of the directional buttons on the FPGA board which include BTNL, BTNR, BTNC, BTNU, BTND. We added one new componenet which was `tilemap_vga.vhd` that includes most of the game logic. The port mapping of leddec16 was modified slightly to include two separate display ports where one would display the current game time and the other would display the previous game time. A process was added to allow for constant update of the leds. Tilemap_vga port mapping includes clock, pixel row, pixel column and all of the button as in ports and red, green, blue, counter for time, and new_last_score (previous game completion time) as out ports.
 Note: "..." indicates that there is unmodified code that has been purposely excluded
 ```
 ...
@@ -258,7 +258,7 @@ ARCHITECTURE Behavioral OF Game_Main IS
 END Behavioral;
 ```
 
-### leddec16.vhd
+### `leddec16.vhd`
 This file was only modified slightly to take in two data in ports. One of them would be the current game time displayed on the right four leds and the other would be the previous game completion time displayed on the left four leds. 
 ```
 ENTITY leddec16 IS
@@ -284,7 +284,7 @@ BEGIN
 	         data_2(15 DOWNTO 12); -- digit 3
 ```
 
-### Game_Main.xdc (previously pong.xdc) Modified
+### `Game_Main.xdc` (previously pong.xdc) Modified
 This xdc file was modified to include all of the buttons packages. 
 ```
 set_property -dict { PACKAGE_PIN N17 IOSTANDARD LVCMOS33 } [get_ports { btnc }]; #IO_L9P_T1_DQS_14 Sch=btnc
@@ -294,7 +294,7 @@ set_property -dict { PACKAGE_PIN P18 IOSTANDARD LVCMOS33 } [get_ports { btnd }];
 set_property -dict { PACKAGE_PIN M18 IOSTANDARD LVCMOS33 } [get_ports { btnu }]; #IO_L4N_T0_D05_14 Sch=btnu
 ```
 
-### map_design.vhd
+### `map_design.vhd`
 This code was reference from [circuitben](https://www.circuitben.net/node/24) but modified slightly for the specific screen used. Since each tile was 16x16, the entire map would be a 50 width by 37 height tile map unlike the 32 by 32 tile map in the original code. The circuit tile placement of the map was also altered to create the map of our design. To allow all this, the below code shows the modifications.
 ```
 ...
@@ -357,13 +357,13 @@ BEGIN
 ```
 
 ## Original Code from scratch
-### tilemap_vga.vhd
+### `tilemap_vga.vhd`
 
-### TileType.vhd
+### `TileType.vhd`
 
-### map_design.vhd
+### `map_design.vhd`
 
-### player_controller.vhd
+### `player_controller.vhd`
 
 ## Conclusion
 
