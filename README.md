@@ -122,6 +122,42 @@ END Game_Main;
  - SEG7_anode: Controls the anodes of the 7-segment display
  - SEG7_seg: Controls the segments of the 7-segment display
 
+### `tilemap_vga.vhd`
+```
+ENTITY tilemap_vga IS
+    PORT (
+        clk         : IN  STD_LOGIC;
+        pixel_row   : IN  STD_LOGIC_VECTOR(10 DOWNTO 0);
+        pixel_col   : IN  STD_LOGIC_VECTOR(10 DOWNTO 0);
+        btnl        : IN STD_LOGIC;
+        btnr        : IN STD_LOGIC;
+        btnu        : IN STD_LOGIC;
+        btnd        : IN STD_LOGIC;
+        btnc        : IN STD_LOGIC;
+        red         : OUT STD_LOGIC;
+        green       : OUT STD_LOGIC;
+        blue        : OUT STD_LOGIC;
+        counter     : OUT STD_LOGIC_VECTOR(15 DOWNTO 0);
+        new_last_score : OUT STD_LOGIC_VECTOR(15 DOWNTO 0)
+    );
+END tilemap_vga;
+```
+
+#### Inputs
+ - clk: System clock
+ - pixel_row: 
+ - pixel_col:
+ - btnl: Left Button, used to move left
+ - btnr: Right Button, used to move right
+ - btnc: Center Button, used to attack/unalive enemies
+ - btnd: Down Button, used to reset the game
+ - btnu: Up Button, used to jump
+#### Outputs
+ - red: Controls red output
+ - green: Controls green output
+ - blue: Controls blue output
+ - counter: Used for counting game time
+ - new_last_score: Used to update current saved game completion time to previous game completion time
 
 ## Modifications
 
