@@ -9,7 +9,8 @@ The goal of this project was to create a 2D platformer game using a Nexys A7 boa
 
 ### Gameplay Win
 
-### Gameplay Lose
+### Gameplay Fail
+![](Images/gameplay_fail.mov)
 
 ### Main Aspects of Grid Escape:
 
