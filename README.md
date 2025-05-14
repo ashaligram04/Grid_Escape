@@ -8,9 +8,13 @@ A 2D platformer game designed in VHDL and displayed on a screen using an FPGA bo
 The goal of this project was to create a 2D platformer game using a Nexys A7 board and VGA display. The project replicated common game mechanics from platformer games such as movement, collision detection, and attacking.
 
 ### Gameplay Win
+[Gameplay Win Video](https://youtube.com/shorts/Zy052E8Qeeo)
 
 ### Gameplay Fail
+[Gameplay Fail Video](https://youtube.com/shorts/NM_8QatdL1k)
 
+### Game Timer Counter Video with LEDs
+[Game Timer Counter Video with LEDs](https://youtube.com/shorts/LZx9jwMAcNc)
 
 ### Main Aspects of Grid Escape:
 
@@ -31,6 +35,9 @@ The goal of this project was to create a 2D platformer game using a Nexys A7 boa
 - Collision detection dictates player movement.
   
 - When player collides with flag, game is reset
+
+#### Game Timer:
+- Time of game play and game completion time is kept track of.
 
 ## Expected Behavior
 
@@ -665,7 +672,7 @@ Movement execution is based on the result of the previous movement logic. If the
 - Edited leddec16.vhd
 - Contributed to GitHub repository
 
-#### Sean Anderson
+#### Sean Anderson:
 - Designed player_controller.vhd
 - Edited Game_Main.vhd and Game_main.xdc
 - Edited tilemap_vga.vhd
