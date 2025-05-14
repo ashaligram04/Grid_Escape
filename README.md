@@ -28,6 +28,8 @@ The goal of this project was to create a 2D platformer game using a Nexys A7 boa
 #### Collision Detection:
 
 - Collision detection dictates player movement.
+  
+- When player collides with flag, game is reset
 
 ## Expected Behavior
 
@@ -38,6 +40,10 @@ The goal of this project was to create a 2D platformer game using a Nexys A7 boa
   - Purple ghosts are hovering over platforms.
 
 - Player moves around the map
+
+- When player presses center button, they can attack and unalive enemies
+
+- Game time is kept track
 
 ## Required Hardware
 For the game to work, you will need the following:
@@ -386,6 +392,148 @@ This code was also reference from [circuitben](https://www.circuitben.net/node/2
 
 ## Original Code from scratch
 ### `tilemap_vga.vhd`
+#### Important Behavior - Game Time Counter
+The game time counter works by scaling the clock down so that each count up by 1 is approximately 1 second. Upon reset, the clock time will reset to 0. If the player is reset based on reaching the end flag, the game completion time updates the last_score (previous game completion time). Currently this feature still has issues as the game time does count up but does not modify the previous game completion time.
+```
+    -- Game Time Counter
+    PROCESS(clk)
+    begin
+        IF rising_edge(clk) THEN 
+            IF btnd = '1' OR test_tile_val_h1 = "010" OR test_tile_val_h2 = "010" OR test_tile_val_v1 = "010" OR test_tile_val_v2 = "010" THEN
+                IF test_tile_val_h1 = "010" OR test_tile_val_h2 = "010" OR test_tile_val_v1 = "010" OR test_tile_val_v2 = "010" THEN
+                    IF last_score > std_logic_vector(count) THEN
+                        last_score <= std_logic_vector(count);
+                        new_last_score <= std_logic_vector(count);
+                    END IF;
+                END IF;
+                clock_scaler <= 0;
+                count <= "0000000000000000";
+                counter <= std_logic_vector(count);
+            ELSIF clock_scaler = 34999999 THEN
+                clock_scaler <= 0;
+                count <= count + "0000000000000001";
+                counter <= std_logic_vector(count);
+            ELSE
+                clock_scaler <= clock_scaler + 1;
+            END IF;
+        END IF;
+    END PROCESS;
+```
+
+#### Important Behavior - Player Rendering
+The player rendering works by drawing the player based on an origin point at its top left corner. The player origin is based off its current pixel location in relation to pixel row and column of the screen, and it is displayed to be 12x12 pixels.
+```
+    -- Player sprite rendering (12×12)
+    PROCESS(clk)
+        VARIABLE px, py, pc, pr : INTEGER;
+    BEGIN
+        IF rising_edge(clk) THEN
+            pc := TO_INTEGER(UNSIGNED(pixel_col));
+            pr := TO_INTEGER(UNSIGNED(pixel_row));
+            px := TO_INTEGER(UNSIGNED(player_x));
+            py := TO_INTEGER(UNSIGNED(player_y));
+
+            IF pc < 800 AND pr < 600 THEN
+                IF pc >= px AND pc < px + 12 AND pr >= py AND pr < py + 12 THEN
+                    draw_player  <= '1';
+                    player_red   <= '1';
+                    player_green <= '0';
+                    player_blue  <= '0';
+                ELSE
+                    draw_player  <= '0';
+                    player_red   <= '0';
+                    player_green <= '0';
+                    player_blue  <= '0';
+                END IF;
+            ELSE
+                draw_player  <= '0';
+                player_red   <= '0';
+                player_green <= '0';
+                player_blue  <= '0';
+            END IF;
+        END IF;
+    END PROCESS;
+```
+
+#### Important Behavior - Enemy Logic (Display, movement, and unaliving)
+The enemy logic is formed utilizing an enemy_alive flag to have the enemy be displayed. If the enemy flag is 0, it is not displayed. When enemy flag is 1, enemy is displayed and moves back and forth depending on specific set boundaries. Enemy direction is reversed when it hits a boundary. Enemy position is tracked and then used to draw the enemy in the same way that the player is drawn (based on origin value and 12x12 pixels).
+```
+enemy_logic_1: process(clk)
+begin
+    if rising_edge(clk) then
+        if btnd = '1' OR test_tile_val_h1 = "010" OR test_tile_val_h2 = "010" OR test_tile_val_v1 = "010" OR test_tile_val_v2 = "010" then
+            enemy_x_int_1   <= to_unsigned(400, 10);
+            enemy_y_int_1   <= to_unsigned(225, 10);
+            enemy_dir_1     <= '1';
+            enemy_alive_1   <= '1';
+            move_counter_1  <= (others => '0');
+        elsif enemy_alive_1 = '1' then
+            -- Move enemy every few million cycles
+            move_counter_1 <= move_counter_1 + 1;
+            if move_counter_1 = x"DDDDDD" then
+                move_counter_1 <= (others => '0');
+                if enemy_dir_1 = '1' then
+                    if enemy_x_int_1 < to_unsigned(448, 10) then
+                        enemy_x_int_1 <= enemy_x_int_1 + 1;
+                    else
+                        enemy_dir_1 <= '0';
+                    end if;
+                else
+                    if enemy_x_int_1 > to_unsigned(368, 10) then
+                        enemy_x_int_1 <= enemy_x_int_1 - 1;
+                    else
+                        enemy_dir_1 <= '1';
+                    end if;
+                end if;
+            end if;
+
+            -- Collision detection
+            if (unsigned(player_x) + 11 >= enemy_x_int_1 and
+                unsigned(player_x) <= enemy_x_int_1 + 11 and
+                unsigned(player_y) + 11 >= enemy_y_int_1 and
+                unsigned(player_y) <= enemy_y_int_1 + 11) then
+                hit_player_1 <= '1';
+            else
+                hit_player_1 <= '0';
+            end if;
+            -- PVP Mechanic
+            if btnc = '1' AND (unsigned(player_x) + 21 >= enemy_x_int_1 and
+                unsigned(player_x) <= enemy_x_int_1 + 21 and
+                unsigned(player_y) + 21 >= enemy_y_int_1 and
+                unsigned(player_y) <= enemy_y_int_1 + 21) then
+                    enemy_alive_1 <= '0';
+                end if;
+        else
+            hit_player_1 <= '0';
+        end if;
+    end if;
+end process;
+
+    -- Assign signals for drawing
+    enemy_x_1 <= std_logic_vector(enemy_x_int_1);
+    enemy_y_1 <= std_logic_vector(enemy_y_int_1);
+-- Enemy drawing process  
+    process(clk)
+begin
+    if rising_edge(clk) then
+            if (enemy_alive_1 = '1' and
+                unsigned(pixel_col) >= unsigned(enemy_x_1) and
+                unsigned(pixel_col) < unsigned(enemy_x_1) + 12 and
+                unsigned(pixel_row) >= unsigned(enemy_y_1) and
+                unsigned(pixel_row) < unsigned(enemy_y_1) + 12) then
+                draw_enemy_1  <= '1';
+                enemy_red_1   <= '1';
+                enemy_green_1 <= '0';
+                enemy_blue_1  <= '1';  -- purple
+            else
+                draw_enemy_1  <= '0';
+                enemy_red_1   <= '0';
+                enemy_green_1 <= '0';
+                enemy_blue_1  <= '0';
+            end if;
+        end if;
+end process;
+```
 
 ### `player_controller.vhd`
 
