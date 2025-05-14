@@ -655,7 +655,42 @@ Movement execution is based on the result of the previous movement logic. If the
 
 ### Responsibilities
 
+#### Atharva Shaligram:
+- Edited map_design.vhd and TileType.vhd
+- Edited leddec16.vhd
+- Contributed to GitHub repository
+
+#### Sean Anderson
+- Designed player_controller.vhd
+- Edited Game_Main.vhd and Game_main.xdc
+- Edited tilemap_vga.vhd
+- Contributed to GitHub repository
+
 ### Timeline of Work Completed
+- Monday 5/5:
+  - Design of Grid Escape mapped out
+  - Initialized all files
+  - Edited existing mapping/tile files and began modifying them
+- Wednesday 5/7:
+  - Edited existing Lab 6 files and integrated clock and VGA components
+  - Created our own design of a map
+- Saturday 5/10:
+  - Worked with top-level file (Game_Main.vhd)
+  - Added logic to player such as movement, collision, attacking
+- Sunday 5/11:
+  - Attempted to integrate all the files together
+  - Worked with port mapping and component instantiation
+  - Attempted to debug errors with jumping and mapping
+- Monday 5/12:
+  - Fixed some debug issues
+- Tuesday 5/13:
+  - Tried adding timing element with some success
 
 ### Difficulties 
+- Collision and Jumping Issues
+  - Difficulty: There was an issue with the player going through blocks when jumping to the right. Also, jumping was a big challenge as the player would be upside down or would float.
+  - Solution: A detection mechanism was added to prevent the player from going through tiles and for the jumping, a flag was created to ensure that the player would hit the ground.
+- Timing Display Error
+  - Difficulty: The timer was implemented to some degree. While it would replicate counting in real-time, counting about every second, the final result of the game completion time would not be displayed on the left side of the seven segment display.
+  - Improvement: We would recommend trying to delay when the previous game time is updated so that the time is not overwritten and just set to 0.
 
