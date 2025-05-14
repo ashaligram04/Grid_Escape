@@ -617,9 +617,38 @@ The movement logic process below which consists of predicting tile positions uti
 ```
 
 #### Important Behavior - Movement Execution
-
+Movement execution is based on the result of the previous movement logic. If the next tile in the direction of player movement is determined to be air, the player will move in that direction. Otherwise, the player position will not change. Note that player position only moves when move tick is 1. Player position is reset back to the start when it reaches the end flag (end flag tile number is "010").
 ```
+    -- Movement execution
+    PROCESS(clk)
+    BEGIN
+        IF rising_edge(clk) THEN
+            IF reset_player_1 = '1' OR reset_player_2 = '1' OR test_tile_val_h1 = "010" OR test_tile_val_h2 = "010" OR test_tile_val_v1 = "010" OR test_tile_val_v2 = "010" THEN
+                x_pos <= STD_LOGIC_VECTOR(to_unsigned(212, 10));
+                y_pos <= STD_LOGIC_VECTOR(to_unsigned(416, 10));
+            ELSIF move_tick = '1' THEN
+                IF test_tile_val_h1 = "000" AND test_tile_val_h2 = "000" THEN
+                    IF offset_h = '0' THEN
+                        x_pos <= STD_LOGIC_VECTOR(next_x_h);
+                    ELSE
+                        x_pos <= STD_LOGIC_VECTOR(next_x_h - 11);
+                    END IF;
+                END IF;
 
+                IF test_tile_val_v1 = "000" AND test_tile_val_v2 = "000" THEN
+                    IF offset_v = '0' THEN
+                        y_pos <= STD_LOGIC_VECTOR(next_y_v);
+                    ELSE
+                        y_pos <= STD_LOGIC_VECTOR(next_y_v - 11);
+                    END IF;
+                END IF;
+            END IF;
+        END IF;
+    END PROCESS;
+    
+    -- Position outputs
+    player_x <= x_pos;
+    player_y <= y_pos;
 ```
 
 ## Conclusion
