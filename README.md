@@ -166,11 +166,38 @@ The top level file of our project was based off of pong.vhd from Lab 6. We added
 
 ### leddec16.vhd
 This file was only modified slightly to take in two data in ports. One of them would be the current game time displayed on the right four leds and the other would be the previous game completion time displayed on the left four leds. 
+```
+ENTITY leddec16 IS
+	PORT (
+		dig : IN STD_LOGIC_VECTOR (2 DOWNTO 0); -- which digit to currently display
+		data_1 : IN STD_LOGIC_VECTOR (15 DOWNTO 0); -- 16-bit (4-digit) data
+		data_2 : IN STD_LOGIC_VECTOR (15 DOWNTO 0);
+		anode : OUT STD_LOGIC_VECTOR (7 DOWNTO 0); -- which anode to turn on
+		seg : OUT STD_LOGIC_VECTOR (6 DOWNTO 0)); -- segment code for current digit
+END leddec16;
+
+ARCHITECTURE Behavioral OF leddec16 IS
+	SIGNAL data4 : STD_LOGIC_VECTOR (3 DOWNTO 0); -- binary value of current digit
+BEGIN
+	-- Select digit data to be displayed in this mpx period
+	data4 <= data_1(3 DOWNTO 0) WHEN dig = "000" ELSE -- digit 0
+	         data_1(7 DOWNTO 4) WHEN dig = "001" ELSE -- digit 1
+	         data_1(11 DOWNTO 8) WHEN dig = "010" ELSE -- digit 2
+	         data_1(15 DOWNTO 12) WHEN dig = "011" ELSE -- digit 3
+	         data_2(3 DOWNTO 0) WHEN dig = "100" ELSE -- digit 0
+	         data_2(7 DOWNTO 4) WHEN dig = "101" ELSE -- digit 1
+	         data_2(11 DOWNTO 8) WHEN dig = "110" ELSE -- digit 2
+	         data_2(15 DOWNTO 12); -- digit 3
+```
 
 ### Game_Main.xdc (previously pong.xdc) Modified
 This xdc file was modified to include all of the buttons packages. 
 ```
-
+set_property -dict { PACKAGE_PIN N17 IOSTANDARD LVCMOS33 } [get_ports { btnc }]; #IO_L9P_T1_DQS_14 Sch=btnc
+set_property -dict { PACKAGE_PIN P17 IOSTANDARD LVCMOS33 } [get_ports { btnl }]; #IO_L12P_T1_MRCC_14 Sch=btnl
+set_property -dict { PACKAGE_PIN M17 IOSTANDARD LVCMOS33 } [get_ports { btnr }]; #IO_L10N_T1_D15_14 Sch=btnr
+set_property -dict { PACKAGE_PIN P18 IOSTANDARD LVCMOS33 } [get_ports { btnd }]; #IO_L9N_T1_DQS_D13_14 Sch=btnd
+set_property -dict { PACKAGE_PIN M18 IOSTANDARD LVCMOS33 } [get_ports { btnu }]; #IO_L4N_T0_D05_14 Sch=btnu
 ```
 
 ## Conclusion
