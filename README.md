@@ -87,7 +87,23 @@ Once you have downloaded the files, follow these steps:
 
 ### `Game_Main.vhd`
 ```
-
+ENTITY Game_Main IS
+    PORT (
+        clk_in : IN STD_LOGIC; -- system clock
+        VGA_red : OUT STD_LOGIC_VECTOR (3 DOWNTO 0); -- VGA outputs
+        VGA_green : OUT STD_LOGIC_VECTOR (3 DOWNTO 0);
+        VGA_blue : OUT STD_LOGIC_VECTOR (3 DOWNTO 0);
+        VGA_hsync : OUT STD_LOGIC;
+        VGA_vsync : OUT STD_LOGIC;
+        btnl : IN STD_LOGIC;
+        btnr : IN STD_LOGIC;
+        btnc : IN STD_LOGIC;
+        btnd : IN STD_LOGIC;
+        btnu : IN STD_LOGIC;
+        SEG7_anode : OUT STD_LOGIC_VECTOR (7 DOWNTO 0); -- anodes of four 7-seg displays
+        SEG7_seg : OUT STD_LOGIC_VECTOR (6 DOWNTO 0)
+    ); 
+END Game_Main;
 ```
 
 #### Inputs
