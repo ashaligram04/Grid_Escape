@@ -39,11 +39,15 @@ The goal of this project was to create a 2D platformer game using a Nexys A7 boa
 
   - Purple ghosts are hovering over platforms.
 
-- Player moves around the map
+- Player moves around the map.
 
-- When player presses center button, they can attack and unalive enemies
+- When player presses center button, they can attack and unalive enemies.
 
-- Game time is kept track
+- Game time is kept track of.
+
+### Block Diagram of Game Functionality
+
+![Block Diagram](/Images/block_diagram.png)
 
 ## Required Hardware
 For the game to work, you will need the following:
