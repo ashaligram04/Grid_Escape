@@ -393,7 +393,7 @@ This code was also reference from [circuitben](https://www.circuitben.net/node/2
 ## Original Code from scratch
 ### `tilemap_vga.vhd`
 #### Important Behavior - Game Time Counter
-The game time counter works by scaling the clock down so that each count up by 1 is approximately 1 second. Upon reset, the clock time will reset to 0. If the player is reset based on reaching the end flag, the game completion time updates the last_score (previous game completion time). Currently this feature still has issues as the game time does count up but does not modify the previous game completion time.
+The game time counter works by scaling the clock down so that each count up by 1 is approximately 1 second. Upon reset, the clock time will reset to 0. If the player is reset based on reaching the end flag, the game completion time updates the last_score (previous game completion time). Additionally, upon reaching the end flag, the entire game will reset. Currently this feature still has issues as the game time does count up but does not modify the previous game completion time.
 ```
     -- Game Time Counter
     PROCESS(clk)
@@ -536,6 +536,91 @@ end process;
 ```
 
 ### `player_controller.vhd`
+#### Important Behavior - Movement Tick Generator
+Movement tick generator uses a counter to scale the clock and slow how often movement occurs. This allows for slower, smoother, and continus movement with the player figure. Movement will only occur when move_tick is 1 which is only when the counter reaches the end.
+```
+ -- Movement tick generator
+    PROCESS(clk)
+    BEGIN
+        IF rising_edge(clk) THEN
+            IF move_counter = 199999 THEN
+                move_counter <= 0;
+                move_tick <= '1';
+            ELSE
+                move_counter <= move_counter + 1;
+                move_tick <= '0';
+            END IF;
+        END IF;
+    END PROCESS;
+```
+
+#### Important Behavior - Predictive tile positions and movement logic
+The movement logic process below which consists of predicting tile positions utilizes the buttons on the FPGA board for movement. The logic also includes a counter to limit jump height and consistent gravity. Additionally, the set up of the conditional statements allows for both simultaneous horizontal and vertical movement. Each time a button is pressed, the next tile in the direction of movement is discovered using a tile lookup that takes inputs from an instance of map_rom that are port mapped into player_controller. If the next tile is air (air tile number is "000"), the player will move in the selected direction, otherwise, the player position will not be updated (simulating collision). If the player is one the ground, logic is set up to set a ground flag, which is important in allowing the player to jump again as the player can only jump if they have touched the ground again after a previous jump. If the player presses the down button, the player position is reset back to the beginning.
+```
+-- Predictive tile positions and movement logic
+    PROCESS(clk)
+    BEGIN
+        IF rising_edge(clk) THEN
+            IF btnd = '1' THEN
+                next_x_h <= to_unsigned(212, 10);
+                next_y_h <= to_unsigned(416, 10);
+                next_x_v <= to_unsigned(212, 10);
+                next_y_v <= to_unsigned(416, 10);
+            ELSIF move_tick = '1' THEN
+                -- Horizontal movement
+                IF btnl = '1' AND UNSIGNED(x_pos) > 0 THEN
+                    next_x_h <= UNSIGNED(x_pos) - 1;
+                    offset_h <= '0';
+                ELSIF btnr = '1' AND UNSIGNED(x_pos) < 788 THEN
+                    next_x_h <= UNSIGNED(x_pos) + 12;
+                    offset_h <= '1';
+                ELSE
+                    next_x_h <= UNSIGNED(x_pos);
+                    offset_h <= '0';
+                END IF;
+                next_y_h <= UNSIGNED(y_pos);
+                
+                IF NOT (test_tile_val_v1 = "000") OR NOT (test_tile_val_v2 = "000") THEN
+                    IF offset_v = '1' THEN
+                            ground <= '1';
+                    END IF;
+                END IF;
+                
+                -- Vertical movement
+                IF btnu = '1' AND UNSIGNED(y_pos) > 0 AND jumping = '0' AND ground = '1' THEN
+                    next_y_v <= UNSIGNED(y_pos) - 1;
+                    offset_v <= '0';
+                    jumping <= '1';
+                    ground <= '0';
+                ELSIF jumping = '1' THEN
+                    next_y_v <= UNSIGNED(y_pos) - 1;
+                    offset_v <= '0';
+                    jumpcount <= jumpcount - 1;
+                    IF jumpcount = 0 THEN
+                        jumping <= '0';
+                        jumpcount <= to_unsigned(45, 7);
+                    END IF;
+                ELSIF UNSIGNED(y_pos) < 588 THEN
+                    next_y_v <= UNSIGNED(y_pos) + 12;
+                    offset_v <= '1';
+                    IF test_tile_val_v1 = "000" AND (test_tile_val_v2 = "000") then
+                        ground <= '0';
+                    END IF;
+                ELSE
+                    next_y_v <= UNSIGNED(y_pos);
+                    offset_v <= '0';
+                END IF;
+                next_x_v <= UNSIGNED(x_pos);
+            END IF;
+        END IF;
+    END PROCESS;
+```
+
+#### Important Behavior - Movement Execution
+
+```
+
+```
 
 ## Conclusion
 
