@@ -161,6 +161,18 @@ END tilemap_vga;
 
 ## Modifications
 
+### Game_Main.vhd (previously pong.vhd) Modified
+The top level file of our project was based off of pong.vhd from Lab 6. We added more ports in to include all of the directional buttons on the FPGA board which include BTNL, BTNR, BTNC, BTNU, BTND. We added one new componenet which was tilemap_vga that includes most of the game logic. The port mapping of leddec16 was modified slightly to include two separate display ports where one would display the current game time and the other would display the previous game time. A process was added to allow for constant update of the leds. Tilemap_vga port mapping includes clock, pixel row, pixel column and all of the button as in ports and red, green, blue, counter for time, and new_last_score (previous game completion time) as out ports.
+
+### leddec16.vhd
+This file was only modified slightly to take in two data in ports. One of them would be the current game time displayed on the right four leds and the other would be the previous game completion time displayed on the left four leds. 
+
+### Game_Main.xdc (previously pong.xdc) Modified
+This xdc file was modified to include all of the buttons packages. 
+```
+
+```
+
 ## Conclusion
 
 ### Responsibilities
