@@ -7,6 +7,10 @@ A 2D platformer game designed in VHDL and displayed on a screen using an FPGA bo
 
 The goal of this project was to create a 2D platformer game using a Nexys A7 board and VGA display. The project replicated common game mechanics from platformer games such as movement, collision detection, and attacking.
 
+### Gameplay Win
+
+### Gameplay Lose
+
 ### Main Aspects of Grid Escape:
 
 #### Map Creation:
