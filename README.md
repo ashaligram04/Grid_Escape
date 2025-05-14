@@ -107,9 +107,20 @@ END Game_Main;
 ```
 
 #### Inputs
- - 
+ - clk_in: System clock
+ - btnl: Left Button, used to move left
+ - btnr: Right Button, used to move right
+ - btnc: Center Button, used to attack/unalive enemies
+ - btnd: Down Button, used to reset the game
+ - btnu: Up Button, used to jump
 #### Outputs
- -
+ - VGA_red: Controls red output to VGA screen
+ - VGA_green: Controls green output to VGA screen
+ - VGA_blue: Controls blue output to VGA screen
+ - VGA_hsync: Horizontal sync signal for VGA display
+ - VGA_vsync: Vertical sync signal for VGA display
+ - SEG7_anode: Controls the anodes of the 7-segment display
+ - SEG7_seg: Controls the segments of the 7-segment display
 
 
 ## Modifications
