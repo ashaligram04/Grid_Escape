@@ -295,7 +295,7 @@ set_property -dict { PACKAGE_PIN M18 IOSTANDARD LVCMOS33 } [get_ports { btnu }];
 ```
 
 ### `map_design.vhd`
-This code was reference from [circuitben](https://www.circuitben.net/node/24) but modified slightly for the specific screen used. Since each tile was 16x16, the entire map would be a 50 width by 37 height tile map unlike the 32 by 32 tile map in the original code. The circuit tile placement of the map was also altered to create the map of our design. To allow all this, the below code shows the modifications.
+This code was reference from [circuitben](https://www.circuitben.net/node/24) but modified slightly for the specific screen used. The original code from circuitben is called `map_rom.vhd`. Since each tile was 16x16, the entire map would be a 50 width by 37 height tile map unlike the 32 by 32 tile map in the original code. The circuit tile placement of the map was also altered to create the map of our design. To allow all this, the below code shows the modifications.
 ```
 ...
 ARCHITECTURE map_rom OF map_rom IS
@@ -356,12 +356,14 @@ BEGIN
 
 ```
 
+### `TileType.vhd`
+This code was also reference from [circuitben](https://www.circuitben.net/node/24). The original code from circuitben is called `good_draw_map.vhd`. Modifications were made to change certain tiles to our specific design. Specifically, tile 2 was modified to create an end flag (shown below). Only tiles 0 (air), 1 (brick), 2 (flag), and 6 (mushroom) were used.
+```
+
+```
+
 ## Original Code from scratch
 ### `tilemap_vga.vhd`
-
-### `TileType.vhd`
-
-### `map_design.vhd`
 
 ### `player_controller.vhd`
 
