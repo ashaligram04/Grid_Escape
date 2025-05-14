@@ -163,6 +163,99 @@ END tilemap_vga;
 
 ### Game_Main.vhd (previously pong.vhd) Modified
 The top level file of our project was based off of pong.vhd from Lab 6. We added more ports in to include all of the directional buttons on the FPGA board which include BTNL, BTNR, BTNC, BTNU, BTND. We added one new componenet which was tilemap_vga that includes most of the game logic. The port mapping of leddec16 was modified slightly to include two separate display ports where one would display the current game time and the other would display the previous game time. A process was added to allow for constant update of the leds. Tilemap_vga port mapping includes clock, pixel row, pixel column and all of the button as in ports and red, green, blue, counter for time, and new_last_score (previous game completion time) as out ports.
+```
+...
+
+ENTITY Game_Main IS
+    PORT (
+        clk_in : IN STD_LOGIC; -- system clock
+        VGA_red : OUT STD_LOGIC_VECTOR (3 DOWNTO 0); -- VGA outputs
+        VGA_green : OUT STD_LOGIC_VECTOR (3 DOWNTO 0);
+        VGA_blue : OUT STD_LOGIC_VECTOR (3 DOWNTO 0);
+        VGA_hsync : OUT STD_LOGIC;
+        VGA_vsync : OUT STD_LOGIC;
+        btnl : IN STD_LOGIC;
+        btnr : IN STD_LOGIC;
+        btnc : IN STD_LOGIC;
+        btnd : IN STD_LOGIC;
+        btnu : IN STD_LOGIC;
+        SEG7_anode : OUT STD_LOGIC_VECTOR (7 DOWNTO 0); -- anodes of four 7-seg displays
+        SEG7_seg : OUT STD_LOGIC_VECTOR (6 DOWNTO 0)
+    ); 
+END Game_Main;
+
+ARCHITECTURE Behavioral OF Game_Main IS
+    ...
+    SIGNAL display_1 : std_logic_vector (15 DOWNTO 0); -- value to be displayed
+    SIGNAL display_2 : std_logic_vector (15 DOWNTO 0); -- value to be displayed
+    SIGNAL led_mpx : STD_LOGIC_VECTOR (2 DOWNTO 0); -- 7-seg multiplexing clock
+    SIGNAL led_count : unsigned(18 downto 0) := (others => '0');
+    ...
+    COMPONENT tilemap_vga is
+        PORT (
+          clk         : IN  STD_LOGIC;
+          pixel_row   : IN  STD_LOGIC_VECTOR(10 DOWNTO 0);
+          pixel_col   : IN  STD_LOGIC_VECTOR(10 DOWNTO 0);
+          btnl        : IN STD_LOGIC;
+          btnr        : IN STD_LOGIC;
+          btnu        : IN STD_LOGIC;
+          btnd        : IN STD_LOGIC;
+          btnc        : IN STD_LOGIC;
+          red         : OUT STD_LOGIC;
+          green       : OUT STD_LOGIC;
+          blue        : OUT STD_LOGIC;
+          counter     : OUT STD_LOGIC_VECTOR(15 DOWNTO 0);
+          new_last_score : OUT STD_LOGIC_VECTOR(15 DOWNTO 0)
+        );
+    END COMPONENT;
+   ...
+
+    COMPONENT leddec16 IS
+        PORT (
+            dig : IN STD_LOGIC_VECTOR (2 DOWNTO 0);
+            data_1 : IN STD_LOGIC_VECTOR (15 DOWNTO 0);
+            data_2 : IN STD_LOGIC_VECTOR (15 DOWNTO 0);
+            anode : OUT STD_LOGIC_VECTOR (7 DOWNTO 0);
+            seg : OUT STD_LOGIC_VECTOR (6 DOWNTO 0)
+        );
+    END COMPONENT; 
+
+    ...
+    
+    process(pxl_clk)
+    begin
+        if rising_edge(pxl_clk) then
+            led_count <= led_count + 1;
+            led_mpx <= std_logic_vector(led_count(18 downto 16)); -- slow ~1 kHz refresh
+        end if;
+    end process;
+    
+    tilemap : tilemap_vga
+    PORT MAP(
+        clk => pxl_clk,
+        pixel_row => S_pixel_row, 
+        pixel_col => S_pixel_col, 
+        red => S_red, 
+        green => S_green, 
+        blue => S_blue,
+        btnl => btnl,
+        btnr => btnr,
+        btnu => btnu,
+        btnd => btnd,
+        btnc => btnc,
+        counter => display_1,
+        new_last_score => display_2
+    );
+    
+    ...
+
+    led1 : leddec16
+    PORT MAP(
+      dig => led_mpx, data_1 => display_1, data_2 => display_2,
+      anode => SEG7_anode, seg => SEG7_seg
+    );
+END Behavioral;
+```
 
 ### leddec16.vhd
 This file was only modified slightly to take in two data in ports. One of them would be the current game time displayed on the right four leds and the other would be the previous game completion time displayed on the left four leds. 
